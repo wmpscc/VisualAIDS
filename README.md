@@ -1,2 +1,2 @@
-# Visual AIDS
+# Visual Assistant
 
