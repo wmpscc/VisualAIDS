@@ -55,13 +55,15 @@ cap = cv.VideoCapture(1)  # capture the frames from the web camera
 
 while cap.isOpened():
     ret, frame = cap.read()
-    # cap.set(3, 640)
-    # cap.set(4, 480)
+    cap.set(3, 640)
+    cap.set(4, 240)
+
     if ret == True:
         frame = cv.flip(frame, 1)
+        print(np.shape(frame))
+
         frame = frame[:, :320, :]  # 取左边
         # frame = cv.imread("sample_img/7.jpg")
-        print(np.shape(frame))
 
         focusF = frame  # 检测区域
 
