@@ -33,6 +33,28 @@ def inference_image(dev,
     return img_orig, boxes
 
 
+def get_cap():
+    cap = cv2.VideoCapture(1)
+    dev = movidus_utils.get_mvnc_device()
+
+    while cap.isOpened():
+        ret, frame = cap.read()
+        cap.set(3, 640)
+        cap.set(4, 240)
+        cap.set(cv2.CAP_PROP_FPS, 4)
+
+        if ret == True:
+            frame = frame[:, :320, :]
+            img, boxes = inference_image(dev=dev,
+                                         graph_file="graph/tiny-yolo-voc-1c.graph",
+                                         meta_file="graph/tiny-yolo-voc-1c.meta",
+                                         img_in=frame, threshold=0.3)
+            cv2.imshow("img", img)
+            print(boxes)
+
+            k = cv2.waitKey(1) & 0xff
+
+
 def inference_video(graph_file="graph/tiny-yolo-voc-1c.graph",
                     meta_file="graph/tiny-yolo-voc-1c.meta",
                     threshold=0.3):
@@ -41,8 +63,6 @@ def inference_video(graph_file="graph/tiny-yolo-voc-1c.graph",
     dev = movidus_utils.get_mvnc_device()
     graph, input_fifo, output_fifo = movidus_utils.load_graph(dev, graph_file)
     cap = cv2.VideoCapture(1)
-    # cap.open(1)
-
 
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
@@ -70,36 +90,11 @@ def inference_video(graph_file="graph/tiny-yolo-voc-1c.graph",
         y_out = np.squeeze(y_out)
         boxes = yolo_utils.procces_out(y_out, meta, img_orig_dimensions)
         yolo_utils.add_bb_to_img(frame_orig, boxes)
-        # out.write(frame_orig)
         cv2.imshow("out", frame_orig)
         k = cv2.waitKey(1) & 0xff
 
     cap.release()
-    # out.release()
-
-
-def get_cap():
-    cap = cv2.VideoCapture(1)
-    dev = movidus_utils.get_mvnc_device()
-
-    while cap.isOpened():
-        ret, frame = cap.read()
-        cap.set(3, 640)
-        cap.set(4, 240)
-        cap.set(cv2.CAP_PROP_FPS, 4)
-
-        if ret == True:
-            frame = frame[:, :320, :]
-            img, boxes = inference_image(dev=dev,
-                                         graph_file="graph/tiny-yolo-voc-1c.graph",
-                                         meta_file="graph/tiny-yolo-voc-1c.meta",
-                                         img_in=frame, threshold=0.3)
-            cv2.imshow("img", img)
-            print(boxes)
-
-            k = cv2.waitKey(1) & 0xff
 
 
 if __name__ == "__main__":
-    # get_cap()
     inference_video()
