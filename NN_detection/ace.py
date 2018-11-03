@@ -79,4 +79,5 @@ def zmIceColor(I, ratio=2, radius=3):  # rgb三通道分别增强，ratio是对�
 
 if __name__ == '__main__':
     m = zmIceColor(cv2.imread('1.bmp') / 255.0) * 255
+    print(m)
     cv2.imwrite('zmIce.jpg', m)
