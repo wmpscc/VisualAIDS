@@ -51,7 +51,7 @@ def pauseT(focusF, fingerT, ftop):
 
 
 ## Main function
-cap = cv.VideoCapture(1)  # capture the frames from the web camera
+cap = cv.VideoCapture(0)  # capture the frames from the web camera
 
 while cap.isOpened():
     ret, frame = cap.read()
