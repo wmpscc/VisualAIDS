@@ -55,8 +55,8 @@ cap = cv.VideoCapture(0)  # capture the frames from the web camera
 
 while cap.isOpened():
     ret, frame = cap.read()
-    cap.set(3, 640)
-    cap.set(4, 240)
+    # cap.set(3, 640)
+    # cap.set(4, 240)
 
     if ret == True:
         frame = cv.flip(frame, 1)
