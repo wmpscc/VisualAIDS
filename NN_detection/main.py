@@ -37,8 +37,6 @@ def inference_image(dev,
     return img_orig, boxes
 
 
-def object_inference():
-    pass
 
 
 

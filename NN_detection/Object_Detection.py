@@ -7,7 +7,7 @@ import sys
 class object:
     def __init__(self):
         self.IMAGE_FROM_DISK = "img/1.jpg"
-        self.GRAPH_PATH = "tiny_yolo_v2.graph"
+        self.GRAPH_PATH = "graph/tiny_yolo_v2.graph"
         self.DETECTION_THRESHOLD = 0.40
         self.IOU_THRESHOLD = 0.30
         self.label_name = {0: "bg", 1: "aeroplane", 2: "bicycle", 3: "bird", 4: "boat", 5: "bottle", 6: "bus", 7: "car",
