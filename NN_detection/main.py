@@ -6,8 +6,10 @@ import movidus_utils
 import yolo_utils
 from graph_ace import ace_algorithm
 from fingure_detection import fingure_top
+from Object_Detection import object
 ace = ace_algorithm()
 fd = fingure_top()
+obd = object()
 
 
 def inference_image(dev,
@@ -35,6 +37,11 @@ def inference_image(dev,
     return img_orig, boxes
 
 
+def object_inference():
+    pass
+
+
+
 def inference_video(graph_file="graph/tiny-yolo-voc-1c.graph",
                     meta_file="graph/tiny-yolo-voc-1c.meta",
                     threshold=0.3):
@@ -42,6 +49,8 @@ def inference_video(graph_file="graph/tiny-yolo-voc-1c.graph",
     meta['thresh'] = threshold
     dev = movidus_utils.get_mvnc_device()
     graph, input_fifo, output_fifo = movidus_utils.load_graph(dev, graph_file)
+    is_open = True
+
     cap = cv2.VideoCapture(1)
 
     fps = int(cap.get(cv2.CAP_PROP_FPS))
@@ -63,6 +72,11 @@ def inference_video(graph_file="graph/tiny-yolo-voc-1c.graph",
         img_orig_dimensions = frame_orig.shape
         frame = yolo_utils.pre_proc_img(frame, meta)
         start = time.time()
+
+        if is_open == False:
+            dev = movidus_utils.get_mvnc_device()
+            graph, input_fifo, output_fifo = movidus_utils.load_graph(dev, graph_file)
+
         graph.queue_inference_with_fifo_elem(
             input_fifo, output_fifo, frame, 'user object')
         output, _ = output_fifo.read_elem()
@@ -96,6 +110,13 @@ def inference_video(graph_file="graph/tiny-yolo-voc-1c.graph",
                 ftop = tuple(ftop)
                 cv2.circle(frame_orig, ftop, 5, (0, 0, 255), -1)
                 print(ftop)
+                input_fifo.destroy()
+                output_fifo.destroy()
+                graph.destroy()
+                dev.close()
+                dev.destroy()
+                is_open = False
+                print("out:" + obd.calc_target(ftop, frame_orig))
         cv2.imshow("out", frame_orig)
         k = cv2.waitKey(1) & 0xff
         if k == 27:
