@@ -51,7 +51,7 @@ def pauseT(focusF, fingerT, ftop):
 
 
 ## Main function
-cap = cv.VideoCapture(0)  # capture the frames from the web camera
+cap = cv.VideoCapture(1)  # capture the frames from the web camera
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -59,7 +59,7 @@ while cap.isOpened():
     # cap.set(4, 240)
 
     if ret == True:
-        frame = cv.flip(frame, 1)
+        # frame = cv.flip(frame, 1)
         print(np.shape(frame))
 
         frame = frame[:, :320, :]  # 取左边

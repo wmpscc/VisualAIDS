@@ -3,14 +3,42 @@ import cv2
 import numpy as np
 import sys
 
-IMAGE_FROM_DISK = "img/1.jpg"
-GRAPH_PATH = "tiny_yolo_v2.graph"
-DETECTION_THRESHOLD = 0.40
-IOU_THRESHOLD = 0.30
+IMAGE_FROM_DISK = "img/7.jpg"
+# GRAPH_PATH = "graph/tiny_yolo_v2.graph"
+GRAPH_PATH = "graph/n20.graph"
+DETECTION_THRESHOLD = 0.09
+IOU_THRESHOLD = 0.5
 
-label_name = {0: "bg", 1: "aeroplane", 2: "bicycle", 3: "bird", 4: "boat", 5: "bottle", 6: "bus", 7: "car", 8: "cat",
-              9: "chair", 10: "cow", 11: "diningtable", 12: "dog", 13: "horse", 14: "motorbike", 15: "person",
-              16: "pottedplant", 17: "sheep", 18: "sofa", 19: "train", 20: "tvmonitor"}
+# label_name = {0: "bg", 1: "aeroplane", 2: "bicycle", 3: "bird", 4: "boat", 5: "bottle", 6: "bus", 7: "car", 8: "cat",
+#               9: "chair", 10: "cow", 11: "diningtable", 12: "dog", 13: "horse", 14: "motorbike", 15: "person",
+#               16: "pottedplant", 17: "sheep", 18: "sofa", 19: "train", 20: "tvmonitor"}
+
+label_name = {0: "bg", 1: "person", 2: "bicycle", 3: "car", 4: "bus", 5: "backpack", 6: "umbrella", 7: "handbag", 8: "suitcase",
+              9: "bottle", 10: "cup", 11: "banana", 12: "apple", 13: "orange", 14: "chair", 15: "laptop",
+              16: "mouse", 17: "keyboard", 18: "cell phone", 19: "book", 20: "clock"}
+# label_name = {0: "bg", 1: "人", 2: "自行车", 3: "汽车", 4: "巴士", 5: "背包", 6: "伞", 7: "手提包", 8: "手提箱",
+#               9: "瓶子", 10: "杯", 11: "香蕉", 12: "苹果", 13: "橙子", 14: "椅子", 15: "笔记本电脑",
+#               16: "鼠标", 17: "键盘", 18: "手机", 19: "书", 20: "时钟"}
+
+
+# label_name = {0: "bg", 1: "aeroplane", 2: "bicycle", 3: "bird", 4: "boat", 5: "bottle", 6: "bus", 7: "car", 8: "cat",
+#               9: "chair", 10: "cow", 11: "diningtable", 12: "dog", 13: "horse", 14: "motorbike", 15: "person",
+#               16: "pottedplant", 17: "sheep", 18: "sofa", 19: "train", 20: "tvmonitor",
+#               21: "bg", 22: "aeroplane", 23: "bicycle", 24: "bird", 25: "boat", 26: "bottle", 27: "bus"}
+
+# label_name = {0: "bg", 1: "aeroplane", 2: "bicycle", 3: "bird", 4: "boat", 5: "bottle", 6: "bus", 7: "car", 8: "cat",
+#               9: "chair", 10: "cow", 11: "diningtable", 12: "dog", 13: "horse", 14: "motorbike", 15: "person",
+#               16: "pottedplant", 17: "sheep", 18: "sofa", 19: "train", 20: "tvmonitor",
+#               21: "bg", 22: "aeroplane", 23: "bicycle", 24: "bird", 25: "boat", 26: "bottle",
+#               27: "bus", 28: "car", 29: "cat",
+#               30: "chair", 31: "diningtable", 32: "dog", 33: "horse", 34: "motorbike", 35: "person",
+#               36: "pottedplant", 37: "sheep", 38: "sofa", 39: "train", 40: "cow", 41: "aeroplane", 42: "bicycle",
+#               43: "bird", 44: "boat", 45: "bottle", 46: "bus", 47: "car", 48: "cat",
+#               49: "chair", 50: "tvmonitor", 51: "diningtable", 52: "dog", 53: "horse", 54: "motorbike", 55: "person",
+#               56: "pottedplant", 57: "sheep", 58: "sofa", 59: "train", 60: "tvmonitor", 61: "aeroplane", 62: "bicycle",
+#               63: "bird", 64: "boat", 65: "bottle", 66: "bus", 67: "car", 68: "cat",
+#               69: "chair", 70: "cow", 71: "diningtable", 72: "dog", 73: "horse", 74: "motorbike", 75: "person",
+#               76: "pottedplant", 77: "sheep", 78: "sofa", 79: "train", 80: "tvmonitor"}
 
 
 def sigmoid(x):
@@ -73,12 +101,13 @@ def post_processing(output, original_img):
     # Tiny Yolo V2 uses a 13 x 13 grid with 5 anchor boxes for each grid cell.
     # This specific model was trained with the VOC Pascal data set and is comprised of 20 classes
 
-    original_results = np.reshape(original_results, (13, 13, 125))
+    # original_results = np.reshape(original_results, (13, 13, 125))
+    original_results = np.reshape(original_results, (13, 13, 125))  # 20:125, 27:160, 80:425
 
     # The 125 results need to be re-organized into 5 chunks of 25 values
     # 20 classes + 1 score + 4 coordinates = 25 values
     # 25 values for each of the 5 anchor bounding boxes = 125 values
-    reordered_results = np.zeros((13 * 13, 5, 25))
+    reordered_results = np.zeros((13 * 13, 5, 25))  # 20:25, 27:32 80:85
 
     index = 0
     for row in range(num_grids):
@@ -165,7 +194,7 @@ def post_processing(output, original_img):
         if box_ymax > image_height:
             box_ymax = image_height
 
-        print(label_name[box[4]], box_xmin, box_ymin, box_xmax, box_ymax)
+        # print(label_name[box[4]], box_xmin, box_ymin, box_xmax, box_ymax)
 
         # label shape and colorization
         label_text = label_name[box[4]] + " " + str("{0:.2f}".format(box[5] * box[6]))

@@ -49,7 +49,7 @@ def inference_video(graph_file="graph/tiny-yolo-voc-1c.graph",
     graph, input_fifo, output_fifo = movidus_utils.load_graph(dev, graph_file)
     is_open = True
 
-    cap = cv2.VideoCapture(1)
+    cap = cv2.VideoCapture(0)
 
     fps = int(cap.get(cv2.CAP_PROP_FPS))
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))

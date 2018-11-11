@@ -1,18 +1,22 @@
 from mvnc import mvncapi as mvnc
 import cv2
 import numpy as np
-import sys
 
 
 class object:
     def __init__(self):
         self.IMAGE_FROM_DISK = "img/1.jpg"
         self.GRAPH_PATH = "graph/n20.graph"
-        self.DETECTION_THRESHOLD = 0.40
-        self.IOU_THRESHOLD = 0.30
-        self.label_name = {0: "bg", 1: "person", 2: "bicycle", 3: "car", 4: "bus", 5: "backpack", 6: "umbrella", 7: "handbag", 8: "suitcase",
-              9: "bottle", 10: "cup", 11: "banana", 12: "apple", 13: "orange", 14: "chair", 15: "laptop",
-              16: "mouse", 17: "keyboard", 18: "cell phone", 19: "book", 20: "clock"}
+        self.DETECTION_THRESHOLD = 0.1
+        self.IOU_THRESHOLD = 0.1
+        self.label_name = {0: "bg", 1: "人", 2: "自行车", 3: "汽车", 4: "巴士", 5: "背包", 6: "伞", 7: "手提包", 8: "手提箱",
+              9: "瓶子", 10: "杯", 11: "香蕉", 12: "苹果", 13: "橙子", 14: "椅子", 15: "笔记本电脑",
+              16: "鼠标", 17: "键盘", 18: "手机", 19: "书", 20: "时钟"}
+
+        # self.label_name = {0: "bg", 1: "person", 2: "bicycle", 3: "car", 4: "bus", 5: "backpack", 6: "umbrella", 7: "handbag", 8: "suitcase",
+        #       9: "bottle", 10: "cup", 11: "banana", 12: "apple", 13: "orange", 14: "chair", 15: "laptop",
+        #       16: "mouse", 17: "keyboard", 18: "cell phone", 19: "book", 20: "clock"}
+
 
     def sigmoid(self, x):
         return 1.0 / (1 + np.exp(x * -1.0))
@@ -166,7 +170,7 @@ class object:
 
             label.append(self.label_name[box[4]])
             local.append(((box_xmax + box_xmin) / 2, (box_ymax + box_ymin) / 2))
-            print(self.label_name[box[4]], box_xmin, box_ymin, box_xmax, box_ymax)
+            # print(self.label_name[box[4]], box_xmin, box_ymin, box_xmax, box_ymax)
 
         return label, local
 
@@ -217,11 +221,12 @@ class object:
         labels, locals = self.post_processing(output, original_img)
 
         minDis = 999
-        minLabel = 0
+        minLabel = "未发现物品"
         for i in range(len(labels)):
             dis = np.sqrt(np.power((ftop[0] - locals[i][0]), 2) + np.power((ftop[1] - locals[i][1]), 2))
             if(dis < minDis):
                 minLabel = labels[i]
+            # print(labels)
 
 
         # clean up
