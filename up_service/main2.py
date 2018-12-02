@@ -62,7 +62,7 @@ def get_fingure_label(graph_file="graph/tiny-yolo-voc-1c.graph",
             roi = frame_orig[top:bot, left:right, :3]
             ftop = fd.get_fingure_top(roi)
             if ftop != -1:
-                # cv2.circle(roi, ftop, 5, (0, 0, 255), -1)
+                cv2.circle(roi, ftop, 5, (0, 0, 255), -1)
                 ftop = list(ftop)
                 ftop[0] = ftop[0] + left
                 ftop[1] = ftop[1] + top
@@ -79,81 +79,83 @@ def get_fingure_label(graph_file="graph/tiny-yolo-voc-1c.graph",
     cap.release()
 
 
-def getip():
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("www.baidu.com", 0))
-        ip = s.getsockname()[0]
-        print(ip)
-    except:
-        ip = "x.x.x.x"
-    finally:
-        s.close()
-    return ip
+# def getip():
+#     try:
+#         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#         s.connect(("www.baidu.com", 0))
+#         ip = s.getsockname()[0]
+#         print(ip)
+#     except:
+#         ip = "x.x.x.x"
+#     finally:
+#         s.close()
+#     return ip
+#
+#
+# print("start socket: TCP...")
+# socket_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#
+# HOST_IP = getip()
+# HOST_PORT = 7653
+#
+# print("tcp server listen @ %s:%d!" % (HOST_IP, HOST_PORT))
+# host_addr = (HOST_IP, HOST_PORT)
+# socket_tcp.bind(host_addr)
+# socket_tcp.listen(1)
 
+# while True:
+#     print("waiting for connection...")
+#     socket_con, (client_ip, client_port) = socket_tcp.accept()
+#     print("connectionaccepted from %s." % client_ip)
+#
+#     # socket_con.send(b"welcome!")
+#
+#     while True:
+#         try:
+#             data = socket_con.recv(2048)
+#
+#             datastr = data.decode()
+#             if datastr == "3":
+#                 print(datastr)
+#                 camera1 = cv2.VideoCapture(1)
+#                 camera1.set(3, 640)
+#                 camera1.set(4, 480)
+#                 reSt, reDis = estimation.eismation(camera1)
+#                 camera1.release()
+#                 sendData = {
+#                     '1': 3,
+#                     '2': reSt,
+#                     '3': reDis
+#                 }
+#                 print(sendData)
+#                 messagestr = json.dumps(sendData)
+#                 message = bytes(messagestr, encoding="utf8")
+#                 socket_con.send(message)
+#             if datastr == "4":
+#                 print(datastr)
+#                 sendData = {
+#                     '1': 4,
+#                     '2': get_fingure_label()
+#                 }
+#                 print(sendData)
+#                 messagestr = json.dumps(sendData)
+#                 message = bytes(messagestr, encoding="utf8")
+#                 socket_con.send(message)
+#             if datastr == "5":
+#                 print(datastr)
+#                 # resultstr = ocrweb()
+#                 sendData = {
+#                     '1': 5,
+#                     '2': "说文解词"
+#                 }
+#                 messagestr = json.dumps(sendData)
+#                 message = bytes(messagestr, encoding="utf8")
+#                 socket_con.send(message)
+#         except:
+#             print("cash one !")
+#
 
-print("start socket: TCP...")
-socket_tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-HOST_IP = getip()
-HOST_PORT = 7653
-
-print("tcp server listen @ %s:%d!" % (HOST_IP, HOST_PORT))
-host_addr = (HOST_IP, HOST_PORT)
-socket_tcp.bind(host_addr)
-socket_tcp.listen(1)
-
-while True:
-    print("waiting for connection...")
-    socket_con, (client_ip, client_port) = socket_tcp.accept()
-    print("connectionaccepted from %s." % client_ip)
-
-    # socket_con.send(b"welcome!")
-
-    while True:
-        try:
-            data = socket_con.recv(2048)
-
-            datastr = data.decode()
-            if datastr == "3":
-                print(datastr)
-                camera1 = cv2.VideoCapture(0)
-                camera1.set(3, 640)
-                camera1.set(4, 240)
-                reSt, reDis = estimation.eismation(camera1)
-                camera1.release()
-                sendData = {
-                    '1': 3,
-                    '2': reSt,
-                    '3': reDis
-                }
-                print(sendData)
-                messagestr = json.dumps(sendData)
-                message = bytes(messagestr, encoding="utf8")
-                socket_con.send(message)
-            if datastr == "4":
-                print(datastr)
-                name = get_fingure_label()
-                sendData = {
-                    '1': 4,
-                    '2': name if name == "发现物品" else "这是" + name
-                }
-                print(sendData)
-                messagestr = json.dumps(sendData)
-                message = bytes(messagestr, encoding="utf8")
-                socket_con.send(message)
-            if datastr == "5":
-                print(datastr)
-                # resultstr = ocrweb()
-                sendData = {
-                    '1': 5,
-                    '2': "说文解词"
-                }
-                messagestr = json.dumps(sendData)
-                message = bytes(messagestr, encoding="utf8")
-                socket_con.send(message)
-        except:
-            print("cash one !")
-
-
-
+try:
+    print(get_fingure_label())
+except:
+    print("capture error")

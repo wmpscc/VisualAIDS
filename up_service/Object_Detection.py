@@ -6,16 +6,40 @@ import numpy as np
 class object:
     def __init__(self):
         self.IMAGE_FROM_DISK = "img/1.jpg"
-        self.GRAPH_PATH = "graph/n20.graph"
+        self.GRAPH_PATH = "graph/tiny_yolo_v2.graph"
         self.DETECTION_THRESHOLD = 0.1
         self.IOU_THRESHOLD = 0.1
-        self.label_name = {0: "bg", 1: "人", 2: "自行车", 3: "汽车", 4: "巴士", 5: "背包", 6: "伞", 7: "手提包", 8: "手提箱",
-              9: "瓶子", 10: "杯", 11: "香蕉", 12: "苹果", 13: "橙子", 14: "椅子", 15: "笔记本电脑",
-              16: "鼠标", 17: "键盘", 18: "手机", 19: "书", 20: "时钟"}
-
+        # self.label_name = {0: "bg", 1: "人", 2: "自行车", 3: "汽车", 4: "巴士", 5: "背包", 6: "伞", 7: "手提包", 8: "手提箱",
+        #       9: "瓶子", 10: "杯", 11: "香蕉", 12: "苹果", 13: "橙子", 14: "椅子", 15: "笔记本电脑",
+        #       16: "鼠标", 17: "键盘", 18: "手机", 19: "书", 20: "时钟"}
         # self.label_name = {0: "bg", 1: "person", 2: "bicycle", 3: "car", 4: "bus", 5: "backpack", 6: "umbrella", 7: "handbag", 8: "suitcase",
         #       9: "bottle", 10: "cup", 11: "banana", 12: "apple", 13: "orange", 14: "chair", 15: "laptop",
         #       16: "mouse", 17: "keyboard", 18: "cell phone", 19: "book", 20: "clock"}
+
+        self.label_name = {0: "bg", 1: "飞机", 2: "自行车", 3: "鸟", 4: "船", 5: "瓶子", 6: "公共汽车", 7: "汽车", 8: "猫",
+              9: "椅子", 10: "牛", 11: "餐桌", 12: "狗", 13: "马", 14: "摩托车", 15: "人",
+              16: "盆栽植物", 17: "羊", 18: "沙发", 19: "火车", 20: "显示器"}
+
+    # 飞机
+    # 自行车
+    # 鸟
+    # 船
+    # 瓶
+    # 公共汽车
+    # 车
+    # 猫
+    # 椅子
+    # 牛
+    # 餐桌
+    # 狗
+    # 马
+    # 摩托车
+    # 人
+    # 盆栽植物
+    # 羊
+    # 沙发
+    # 火车
+    # 电视监视器
 
 
     def sigmoid(self, x):
@@ -221,10 +245,10 @@ class object:
         labels, locals = self.post_processing(output, original_img)
 
         minDis = 999
-        minLabel = "未发现物品"
+        minLabel = "未知物品"
         for i in range(len(labels)):
             dis = np.sqrt(np.power((ftop[0] - locals[i][0]), 2) + np.power((ftop[1] - locals[i][1]), 2))
-            if(dis < minDis):
+            if(dis < minDis and labels[i] != "人"):
                 minLabel = labels[i]
             # print(labels)
 
