@@ -5,3 +5,4 @@ cur
 graph
 tmp
 data
+__pycache__
