@@ -63,10 +63,13 @@ for stage, filename in sets.items():
     for im in tqdm(data["images"], "Parse Images"):
         img = base_dict(im['coco_url'], im['width'], im['height'], 3)
         images[im["id"]] = img
+        print(im)
+
 
     for an in tqdm(data["annotations"], "Parse Annotations"):
         ann = base_object(images[an['image_id']]['annotation']["size"], cate[an['category_id']], an['bbox'])
         images[an['image_id']]['annotation']['object'].append(ann)
+
 
     for k, im in tqdm(images.items(), "Write Annotations"):
         im['annotation']['object'] = im['annotation']['object'] or [None]
